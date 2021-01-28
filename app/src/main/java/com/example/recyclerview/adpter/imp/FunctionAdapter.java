@@ -1,4 +1,4 @@
-package com.example.recyclerview.adpter;
+package com.example.recyclerview.adpter.imp;
 
 import android.content.Context;
 
@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.recyclerview.R;
-import com.example.recyclerview.adpter.imp.ItemTouchHelperAdapter;
+import com.example.recyclerview.adpter.ItemTouchHelperAdapter;
 import com.example.recyclerview.entity.FunctionItem;
 
 import java.util.ArrayList;

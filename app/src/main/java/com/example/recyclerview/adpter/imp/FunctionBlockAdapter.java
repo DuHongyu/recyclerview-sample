@@ -1,4 +1,4 @@
-package com.example.recyclerview.adpter;
+package com.example.recyclerview.adpter.imp;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.recyclerview.R;
-import com.example.recyclerview.adpter.imp.ItemTouchHelperAdapter;
+import com.example.recyclerview.adpter.ItemTouchHelperAdapter;
 import com.example.recyclerview.entity.FunctionItem;
 
 import java.util.ArrayList;
@@ -19,6 +19,9 @@ import java.util.Collections;
 import java.util.List;
 
 
+/**
+ * @author Du
+ */
 public class FunctionBlockAdapter extends RecyclerView.Adapter<FunctionBlockAdapter.ViewHolder> implements ItemTouchHelperAdapter {
 
     private List<FunctionItem> data = new ArrayList<>();

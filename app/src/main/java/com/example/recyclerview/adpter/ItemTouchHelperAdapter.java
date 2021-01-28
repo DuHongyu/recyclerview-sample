@@ -1,4 +1,4 @@
-package com.example.recyclerview.adpter.imp;
+package com.example.recyclerview.adpter;
 
 
 import androidx.recyclerview.widget.RecyclerView;

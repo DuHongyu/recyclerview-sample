@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.util.DisplayMetrics;
@@ -21,12 +22,14 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.example.recyclerview.adpter.FunctionAdapter;
-import com.example.recyclerview.adpter.FunctionBlockAdapter;
+import com.example.recyclerview.adpter.imp.FunctionAdapter;
+import com.example.recyclerview.adpter.imp.FunctionBlockAdapter;
 import com.example.recyclerview.callback.DefaultItemCallback;
 import com.example.recyclerview.callback.DefaultItemTouchHelper;
 import com.example.recyclerview.decorate.SpaceItemDecoration;
 import com.example.recyclerview.entity.FunctionItem;
+import com.example.recyclerview.utils.DipUtils;
+import com.example.recyclerview.utils.PositionControlUtils;
 import com.example.recyclerview.utils.SfUtils;
 
 import java.util.ArrayList;
@@ -41,10 +44,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int MAX_COUNT = 10;
 
     private int itemWidth = 0;
-    private int lastRow = 0;
-    private int scrollPosition = 0;
-
-    private int tabWidth = 0;
+    private final int lastRow = 0;
+    private final int scrollPosition = 0;
 
     private String currentTab;
 
@@ -90,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         blockAdapter = new FunctionBlockAdapter(this, selData);
         recyclerViewExist.setLayoutManager(new GridLayoutManager(this, 5));
         recyclerViewExist.setAdapter(blockAdapter);
-        recyclerViewExist.addItemDecoration(new SpaceItemDecoration(4, dip2px(this, 10)));
+        recyclerViewExist.addItemDecoration(new SpaceItemDecoration(4, DipUtils.getDipUtils().dip2px(this,10)));
 
         DefaultItemCallback callback = new DefaultItemCallback(blockAdapter);
         DefaultItemTouchHelper helper = new DefaultItemTouchHelper(callback);
@@ -108,70 +109,18 @@ public class MainActivity extends AppCompatActivity {
         functionAdapter = new FunctionAdapter(this, allData);
         recyclerViewAll.setLayoutManager(gridManager);
         recyclerViewAll.setAdapter(functionAdapter);
-        SpaceItemDecoration spaceDecoration = new SpaceItemDecoration(4, dip2px(this, 10));
+        SpaceItemDecoration spaceDecoration = new SpaceItemDecoration(4, DipUtils.getDipUtils().dip2px(this,10));
         recyclerViewAll.addItemDecoration(spaceDecoration);
 
         DefaultItemCallback callbackTwo = new DefaultItemCallback(functionAdapter);
         DefaultItemTouchHelper helperTwo = new DefaultItemTouchHelper(callbackTwo);
         helperTwo.attachToRecyclerView(recyclerViewAll);
 
-        itemWidth = getAtyWidth(this) / 4 + dip2px(this, 2);
+        itemWidth = PositionControlUtils.getPositionControlUtils().getActivityWidth(this) / 4 + DipUtils.getDipUtils().dip2px(this,2);
 
-        resetEditHeight(selData.size());
+        PositionControlUtils.getPositionControlUtils().resetEditHeight(recyclerViewExist,selData.size(),itemWidth,lastRow);
 
         initTab();
-
-    }
-
-    public int dip2px(Context context, float dpValue) {
-
-        Log.d(TAG, "进入dip2px方法：");
-
-        float scale = context.getResources().getDisplayMetrics().density;
-        return (int) (dpValue * scale + 0.5f);
-    }
-
-    public int getAtyWidth(Context context) {
-
-        Log.d(TAG, "进入getAtyWidth方法：");
-
-        try {
-
-            DisplayMetrics mDm = new DisplayMetrics();
-
-            ((Activity) context).getWindowManager().getDefaultDisplay()
-                    .getMetrics(mDm);
-
-            return mDm.widthPixels;
-        } catch (Exception e) {
-            return 0;
-        }
-    }
-
-    private void resetEditHeight(int size) {
-
-        Log.d(TAG, "进入resetEditHeight方法：");
-
-        try {
-            if (size == 0) {
-                size = 1;
-            }
-            int row = size / 5 + (size % 5 > 0 ? 1 : 0);
-            if (row <= 0) {
-                row = 1;
-            }
-            if (lastRow != row) {
-                lastRow = row;
-
-                ViewGroup.LayoutParams params = recyclerViewExist.getLayoutParams();
-
-                params.height = itemWidth * row;
-
-                recyclerViewExist.setLayoutParams(params);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
     }
 
@@ -187,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
 
             if (tabs != null && tabs.size() > 0) {
                 currentTab = tabs.get(0).name;
-                int padding = dip2px(this, 10);
+                int padding = DipUtils.getDipUtils().dip2px(this,10);
                 int size = tabs.size();
 
                 for (int i = 0; i < size; i++) {
@@ -237,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
                 String text = buttonView.getText().toString();
                 if (!currentTab.equals(text) && isChecked) {
                     currentTab = text;
-                    moveToPosition(position);
+                    PositionControlUtils.getPositionControlUtils().moveToPosition(recyclerViewAll,gridManager,position,isMove,scrollPosition,allData);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -245,33 +194,6 @@ public class MainActivity extends AppCompatActivity {
 
         }
     };
-
-    private void moveToPosition(int position) {
-
-        Log.d(TAG, "进入moveToPosition方法：");
-
-        int first = gridManager.findFirstVisibleItemPosition();
-        int end = gridManager.findLastVisibleItemPosition();
-        if (first == -1 || end == -1) {
-            return;
-        }
-
-        if (position <= first) {
-            gridManager.scrollToPosition(position);
-        } else if (position >= end) {
-
-            isMove = true;
-            scrollPosition = position;
-            gridManager.smoothScrollToPosition(recyclerViewAll, null, position);
-        } else {
-
-            int n = position - gridManager.findFirstVisibleItemPosition();
-            if (n > 0 && n < allData.size()) {
-                int top = gridManager.findViewByPosition(position).getTop();
-                recyclerViewAll.scrollBy(0, top);
-            }
-        }
-    }
 
     public void addListener() {
 
@@ -301,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         selData.add(0, item);
                         Log.d(TAG, "selData的大小：" + selData.size());
-                        resetEditHeight(selData.size());
+                        PositionControlUtils.getPositionControlUtils().resetEditHeight(recyclerViewExist,selData.size(),itemWidth,lastRow);
                         blockAdapter.notifyDataSetChanged();
                         item.isSelect = true;
                         return true;
@@ -334,7 +256,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                         functionAdapter.notifyDataSetChanged();
                     }
-                    resetEditHeight(selData.size());
+                    PositionControlUtils.getPositionControlUtils().resetEditHeight(recyclerViewExist,selData.size(),itemWidth,lastRow);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -344,6 +266,7 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerViewAll.addOnScrollListener(onScrollListener);
     }
+
 
     private final RecyclerView.OnScrollListener onScrollListener = new RecyclerView.OnScrollListener() {
 
@@ -387,52 +310,10 @@ public class MainActivity extends AppCompatActivity {
                             currentTab = allData.get(i).name;
                         }
                     }
-                    scrollTab(currentTab);
+                    int tabWidth = 0;
+                    PositionControlUtils.getPositionControlUtils().scrollTab(scrollTab,currentTab, tabWidth,rg_tab,horizontalScrollView,onCheckedChangeListener);
                 }
             }
         }
     };
-
-    private void scrollTab(String newTab) {
-
-        Log.d(TAG, "scrollTab方法：");
-
-        try {
-            int position = scrollTab.indexOf(currentTab);
-            int targetPosition = scrollTab.indexOf(newTab);
-            currentTab = newTab;
-            if (targetPosition != -1) {
-                int x = (targetPosition - position) * getTabWidth();
-                RadioButton radioButton = ((RadioButton) rg_tab.getChildAt(targetPosition));
-                radioButton.setOnCheckedChangeListener(null);
-                radioButton.setChecked(true);
-                radioButton.setOnCheckedChangeListener(onCheckedChangeListener);
-                horizontalScrollView.scrollBy(x, 0);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private int getTabWidth() {
-
-        Log.d(TAG, "getTabWidth方法：");
-
-        if (tabWidth == 0) {
-            if (rg_tab != null && rg_tab.getChildCount() != 0) {
-                tabWidth = rg_tab.getWidth() / rg_tab.getChildCount();
-            }
-        }
-        return tabWidth;
-    }
-
-    @Override
-    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
-    }
 }
