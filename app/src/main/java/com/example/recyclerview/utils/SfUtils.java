@@ -17,17 +17,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by xulc on 2018/6/29.
+ * @author Du
  */
-
-public class SFUtils {
+public class SfUtils {
 
     private static final String TAG = "SFUtils";
 
     private final Context context;
     private SharedPreferences sp = null;
 
-    public SFUtils(Context context) {
+    public SfUtils(Context context) {
         this.context = context;
         sp = context.getSharedPreferences("ceshi", Context.MODE_PRIVATE);
     }
