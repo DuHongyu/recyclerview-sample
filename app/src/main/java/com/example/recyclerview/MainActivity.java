@@ -27,7 +27,7 @@ import com.example.recyclerview.callback.DefaultItemCallback;
 import com.example.recyclerview.callback.DefaultItemTouchHelper;
 import com.example.recyclerview.decorate.SpaceItemDecoration;
 import com.example.recyclerview.entity.FunctionItem;
-import com.example.recyclerview.utils.SFUtils;
+import com.example.recyclerview.utils.SfUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     private FunctionAdapter functionAdapter;
     private GridLayoutManager gridManager;
 
-    private SFUtils sfUtils;
+    private SfUtils sfUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         rg_tab = (RadioGroup) findViewById(R.id.rg_tab);
         recyclerViewAll = (RecyclerView) findViewById(R.id.recyclerViewAll);
 
-        sfUtils = new SFUtils(this);
+        sfUtils = new SfUtils(this);
         allData = sfUtils.getAllFunctionWithState();
         selData = sfUtils.getSelectFunctionItem();
 
