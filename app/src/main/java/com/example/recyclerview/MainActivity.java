@@ -36,29 +36,21 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
     private static final int MAX_COUNT = 10;
-
     private int itemWidth = 0;
     private final int lastRow = 0;
     private final int scrollPosition = 0;
-
     private String currentTab;
-
     private boolean isMove = false;
     private boolean isDrag = false;
-
     private List<Item> allData;
     private List<Item> selData;
     private final List<String> scrollTab = new ArrayList<>();
-
-
     private RecyclerView recyclerViewExist, recyclerViewAll;
     private HorizontalScrollView horizontalScrollView;
-    private RadioGroup rg_tab;
-
+    private RadioGroup rgTab;
     private ItemBlockAdapter blockAdapter;
     private ItemAdapter itemAdapter;
     private GridLayoutManager gridManager;
-
     private HandleDataUtils handleDataUtils;
 
     @Override
@@ -72,35 +64,26 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
         handleDataUtils.saveSelectFunctionItem(selData);
-
         handleDataUtils.saveAllFunctionWithState(allData);
     }
 
     public void init() {
-        Log.d(TAG, "进入init方法：");
-
         getSupportActionBar().hide();
-
         recyclerViewExist = (RecyclerView) findViewById(R.id.recyclerViewExist);
         horizontalScrollView = (HorizontalScrollView) findViewById(R.id.horizonLScrollView);
-        rg_tab = (RadioGroup) findViewById(R.id.rg_tab);
+        rgTab = (RadioGroup) findViewById(R.id.rg_tab);
         recyclerViewAll = (RecyclerView) findViewById(R.id.recyclerViewAll);
-
         handleDataUtils = new HandleDataUtils(this);
         allData = handleDataUtils.getAllFunctionWithState();
         selData = handleDataUtils.getSelectFunctionItem();
-
         blockAdapter = new ItemBlockAdapter(this, selData);
         recyclerViewExist.setLayoutManager(new GridLayoutManager(this, 5));
         recyclerViewExist.setAdapter(blockAdapter);
         recyclerViewExist.addItemDecoration(new SpaceItemDecoration(4, SizeUtils.getInstance().dip2px(this, 10)));
-
         DefaultItemCallback callback = new DefaultItemCallback(blockAdapter);
         DefaultItemTouchHelper helper = new DefaultItemTouchHelper(callback);
         helper.attachToRecyclerView(recyclerViewExist);
-
         gridManager = new GridLayoutManager(this, 5);
         gridManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
@@ -109,36 +92,23 @@ public class MainActivity extends AppCompatActivity {
                 return fi.isTitle ? 5 : 1;
             }
         });
-
         itemAdapter = new ItemAdapter(this, allData);
         recyclerViewAll.setLayoutManager(gridManager);
         recyclerViewAll.setAdapter(itemAdapter);
         SpaceItemDecoration spaceDecoration = new SpaceItemDecoration(4, SizeUtils.getInstance().dip2px(this, 10));
         recyclerViewAll.addItemDecoration(spaceDecoration);
-
         itemWidth = PositionControlUtils.getPositionControlUtils().getActivityWidth(this) / 4 + SizeUtils.getInstance().dip2px(this, 2);
-
         PositionControlUtils.getPositionControlUtils().resetEditHeight(recyclerViewExist, selData.size(), itemWidth, lastRow);
-
         initTab();
-
     }
 
     private void initTab() {
-
-        Log.d(TAG, "进入initTab方法：");
-
         try {
-
             List<Item> tabs = handleDataUtils.getTabNames();
-
-            Log.d(TAG, "tabs：" + tabs.size());
-
             if (tabs != null && tabs.size() > 0) {
                 currentTab = tabs.get(0).name;
                 int padding = SizeUtils.getInstance().dip2px(this, 10);
                 int size = tabs.size();
-
                 for (int i = 0; i < size; i++) {
                     Item item = tabs.get(i);
                     if (item.isTitle) {
@@ -148,9 +118,7 @@ public class MainActivity extends AppCompatActivity {
                         rb.setButtonDrawable(null);
                         rb.setGravity(Gravity.CENTER);
                         rb.setText(item.name);
-
                         rb.setTag(item.subItemCount);
-
                         rb.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                         try {
 
@@ -163,12 +131,12 @@ public class MainActivity extends AppCompatActivity {
 
                         rb.setOnCheckedChangeListener(onCheckedChangeListener);
 
-                        rg_tab.addView(rb);
+                        rgTab.addView(rb);
 
                     }
                 }
 
-                ((RadioButton) rg_tab.getChildAt(0)).setChecked(true);
+                ((RadioButton) rgTab.getChildAt(0)).setChecked(true);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -178,9 +146,6 @@ public class MainActivity extends AppCompatActivity {
     private final CompoundButton.OnCheckedChangeListener onCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-            Log.d(TAG, "进入onCheckedChanged方法：");
-
             try {
                 int position = (int) buttonView.getTag();
                 String text = buttonView.getText().toString();
@@ -197,17 +162,13 @@ public class MainActivity extends AppCompatActivity {
 
     public void addListener() {
 
-        Log.d(TAG, "进入addListener方法：");
-
         itemAdapter.setOnItemAddListener(new ItemAdapter.OnItemAddListener() {
             @Override
             public boolean add(Item item) {
 
-                Log.d(TAG, "进入addListener/setOnItemAddListener/add方法：");
-
                 if (selData != null && selData.size() < MAX_COUNT) {
                     try {
-                        selData.add(0,item);
+                        selData.add(0, item);
                         Log.d(TAG, "selData的大小：" + selData.size());
                         PositionControlUtils.getPositionControlUtils().resetEditHeight(recyclerViewExist, selData.size(), itemWidth, lastRow);
                         blockAdapter.notifyDataSetChanged();
@@ -228,7 +189,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void remove(Item item) {
 
-                Log.d(TAG, "进入addListener/setOnItemRemoveListener/remove方法：");
                 try {
                     PositionControlUtils.getPositionControlUtils().resetEditHeight(recyclerViewExist, selData.size(), itemWidth, lastRow);
                     if (item != null && item.name != null) {
@@ -236,7 +196,6 @@ public class MainActivity extends AppCompatActivity {
                             Item data = allData.get(i);
                             if (data != null && data.name != null) {
                                 if (item.name.equals(data.name)) {
-                                    Log.d(TAG, "进入addListener/setOnItemRemoveListener/remove方法,将isSelect改为true");
                                     data.isSelect = false;
                                     itemAdapter.notifyDataSetChanged();
                                     break;
@@ -259,9 +218,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-
-            Log.d(TAG, "onScrollListener/onScrollStateChanged方法：");
-
             super.onScrollStateChanged(recyclerView, newState);
             try {
 
@@ -286,8 +242,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
 
-            Log.d(TAG, "onScrollListener/onScrolled方法：");
-
             super.onScrolled(recyclerView, dx, dy);
             if (isDrag) {
                 int position = gridManager.findFirstVisibleItemPosition();
@@ -298,7 +252,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                     int tabWidth = 0;
-                    PositionControlUtils.getPositionControlUtils().scrollTab(scrollTab, currentTab, tabWidth, rg_tab, horizontalScrollView, onCheckedChangeListener);
+                    PositionControlUtils.getPositionControlUtils().scrollTab(scrollTab, currentTab, tabWidth, rgTab, horizontalScrollView, onCheckedChangeListener);
                 }
             }
         }
