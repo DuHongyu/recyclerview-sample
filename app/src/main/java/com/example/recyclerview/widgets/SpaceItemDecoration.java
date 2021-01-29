@@ -1,4 +1,4 @@
-package com.example.recyclerview.decorate;
+package com.example.recyclerview.widgets;
 
 import android.graphics.Canvas;
 import android.graphics.Rect;

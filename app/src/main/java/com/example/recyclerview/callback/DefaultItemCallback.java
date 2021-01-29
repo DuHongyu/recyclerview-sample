@@ -18,6 +18,7 @@ public class DefaultItemCallback extends ItemTouchHelper.Callback {
     public DefaultItemCallback(ItemTouchHelperAdapter touchHelperAdapter) {
         this.touchHelperAdapter = touchHelperAdapter;
     }
+
     @Override
     public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
         int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;

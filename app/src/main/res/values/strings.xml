@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">recyclerview</string>
-    <string name="my_app">我的应用</string>
-    <string name="preservation">保存</string>
+    <string name= "the_selected_module_cannot_exceed">选中的模块不能超过</string>
+    <string name="individual">个</string>
+    <string name="my_name">我的应用</string>
 
 </resources>

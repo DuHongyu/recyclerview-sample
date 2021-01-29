@@ -68,7 +68,7 @@ public class ItemBlockAdapter extends RecyclerView.Adapter<ItemBlockAdapter.View
 
     public void setImage(String url, ImageView iv) {
         try {
-            int rid = context.getResources().getIdentifier(url,"drawable",context.getPackageName());
+            int rid = context.getResources().getIdentifier(url, "drawable", context.getPackageName());
             iv.setImageResource(rid);
         } catch (Exception e) {
             e.printStackTrace();

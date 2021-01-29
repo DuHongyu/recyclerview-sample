@@ -9,9 +9,11 @@ import android.widget.RadioGroup;
 public class SizeUtils {
 
     private static final SizeUtils instance = new SizeUtils();
+
     private SizeUtils() {
     }
-    public static SizeUtils getDipUtils(){
+
+    public static SizeUtils getDipUtils() {
         return instance;
     }
 

@@ -20,7 +20,7 @@ import com.example.recyclerview.adpter.imp.ItemAdapter;
 import com.example.recyclerview.adpter.imp.ItemBlockAdapter;
 import com.example.recyclerview.callback.DefaultItemCallback;
 import com.example.recyclerview.callback.DefaultItemTouchHelper;
-import com.example.recyclerview.decorate.SpaceItemDecoration;
+import com.example.recyclerview.widgets.SpaceItemDecoration;
 import com.example.recyclerview.entity.Item;
 import com.example.recyclerview.utils.SizeUtils;
 import com.example.recyclerview.utils.PositionControlUtils;
@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         blockAdapter = new ItemBlockAdapter(this, selData);
         recyclerViewExist.setLayoutManager(new GridLayoutManager(this, 5));
         recyclerViewExist.setAdapter(blockAdapter);
-        recyclerViewExist.addItemDecoration(new SpaceItemDecoration(4, SizeUtils.getDipUtils().dip2px(this,10)));
+        recyclerViewExist.addItemDecoration(new SpaceItemDecoration(4, SizeUtils.getDipUtils().dip2px(this, 10)));
 
         DefaultItemCallback callback = new DefaultItemCallback(blockAdapter);
         DefaultItemTouchHelper helper = new DefaultItemTouchHelper(callback);
@@ -112,16 +112,16 @@ public class MainActivity extends AppCompatActivity {
         itemAdapter = new ItemAdapter(this, allData);
         recyclerViewAll.setLayoutManager(gridManager);
         recyclerViewAll.setAdapter(itemAdapter);
-        SpaceItemDecoration spaceDecoration = new SpaceItemDecoration(4, SizeUtils.getDipUtils().dip2px(this,10));
+        SpaceItemDecoration spaceDecoration = new SpaceItemDecoration(4, SizeUtils.getDipUtils().dip2px(this, 10));
         recyclerViewAll.addItemDecoration(spaceDecoration);
 
         DefaultItemCallback callbackTwo = new DefaultItemCallback(itemAdapter);
         DefaultItemTouchHelper helperTwo = new DefaultItemTouchHelper(callbackTwo);
         helperTwo.attachToRecyclerView(recyclerViewAll);
 
-        itemWidth = PositionControlUtils.getPositionControlUtils().getActivityWidth(this) / 4 + SizeUtils.getDipUtils().dip2px(this,2);
+        itemWidth = PositionControlUtils.getPositionControlUtils().getActivityWidth(this) / 4 + SizeUtils.getDipUtils().dip2px(this, 2);
 
-        PositionControlUtils.getPositionControlUtils().resetEditHeight(recyclerViewExist,selData.size(),itemWidth,lastRow);
+        PositionControlUtils.getPositionControlUtils().resetEditHeight(recyclerViewExist, selData.size(), itemWidth, lastRow);
 
         initTab();
 
@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
 
             if (tabs != null && tabs.size() > 0) {
                 currentTab = tabs.get(0).name;
-                int padding = SizeUtils.getDipUtils().dip2px(this,10);
+                int padding = SizeUtils.getDipUtils().dip2px(this, 10);
                 int size = tabs.size();
 
                 for (int i = 0; i < size; i++) {
@@ -189,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
                 String text = buttonView.getText().toString();
                 if (!currentTab.equals(text) && isChecked) {
                     currentTab = text;
-                    PositionControlUtils.getPositionControlUtils().moveToPosition(recyclerViewAll,gridManager,position,isMove,scrollPosition,allData);
+                    PositionControlUtils.getPositionControlUtils().moveToPosition(recyclerViewAll, gridManager, position, isMove, scrollPosition, allData);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -212,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         selData.add(0, item);
                         Log.d(TAG, "selData的大小：" + selData.size());
-                        PositionControlUtils.getPositionControlUtils().resetEditHeight(recyclerViewExist,selData.size(),itemWidth,lastRow);
+                        PositionControlUtils.getPositionControlUtils().resetEditHeight(recyclerViewExist, selData.size(), itemWidth, lastRow);
                         blockAdapter.notifyDataSetChanged();
                         item.isSelect = true;
                         return true;
@@ -221,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                     return false;
                 } else {
-                    Toast.makeText(MainActivity.this, "选中的模块不能超过" + MAX_COUNT + "个", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, R.string.the_selected_module_cannot_exceed + MAX_COUNT + R.string.individual, Toast.LENGTH_SHORT).show();
                     return false;
                 }
             }
@@ -245,7 +245,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                         itemAdapter.notifyDataSetChanged();
                     }
-                    PositionControlUtils.getPositionControlUtils().resetEditHeight(recyclerViewExist,selData.size(),itemWidth,lastRow);
+                    PositionControlUtils.getPositionControlUtils().resetEditHeight(recyclerViewExist, selData.size(), itemWidth, lastRow);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -300,7 +300,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                     int tabWidth = 0;
-                    PositionControlUtils.getPositionControlUtils().scrollTab(scrollTab,currentTab, tabWidth,rg_tab,horizontalScrollView,onCheckedChangeListener);
+                    PositionControlUtils.getPositionControlUtils().scrollTab(scrollTab, currentTab, tabWidth, rg_tab, horizontalScrollView, onCheckedChangeListener);
                 }
             }
         }

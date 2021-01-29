@@ -6,6 +6,6 @@
     <color name="transparent">#00FFFFFF</color>
     <color name="line_color">#CCCCCC</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="titlecolor">#1296db</color>
+    <color name="title_color">#1296db</color>
     <color name="black">#000000</color>
 </resources>

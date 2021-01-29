@@ -61,7 +61,7 @@ public class ItemAdapter extends RecyclerView.Adapter implements ItemTouchHelper
             FunctionViewHolder holder = (FunctionViewHolder) viewHolder;
             Item fi = data.get(position);
             ImageView imageView = setImage(fi.imageUrl, holder.iv);
-            final Vibrator vibrator=(Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+            final Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
             imageView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
