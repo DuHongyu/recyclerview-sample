@@ -49,8 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private List<Item> allData;
     private List<Item> selData;
     private final List<String> scrollTab = new ArrayList<>();
-    private List<Item> cashData = new ArrayList<>();
-    ;
+
 
     private RecyclerView recyclerViewExist, recyclerViewAll;
     private HorizontalScrollView horizontalScrollView;
@@ -208,23 +207,11 @@ public class MainActivity extends AppCompatActivity {
 
                 if (selData != null && selData.size() < MAX_COUNT) {
                     try {
-                        selData.add(0, item);
+                        selData.add(0,item);
                         Log.d(TAG, "selData的大小：" + selData.size());
                         PositionControlUtils.getPositionControlUtils().resetEditHeight(recyclerViewExist, selData.size(), itemWidth, lastRow);
                         blockAdapter.notifyDataSetChanged();
                         item.isSelect = true;
-                        if (item.name != null) {
-                            for (int i = 0; i < allData.size(); i++) {
-                                Item data = allData.get(i);
-                                if (data != null && data.name != null) {
-                                    if (item.name.equals(data.name)) {
-                                        data.isSelect = false;
-                                        break;
-                                    }
-                                }
-                            }
-                            itemAdapter.notifyDataSetChanged();
-                        }
                         return true;
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -237,12 +224,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        itemAdapter.setOnItemRemoveListener(new ItemAdapter.OnItemRemoveListener() {
-            @Override
-            public void remove(Item item) {
-
-            }
-        });
         blockAdapter.setOnItemRemoveListener(new ItemBlockAdapter.OnItemRemoveListener() {
             @Override
             public void remove(Item item) {
@@ -257,17 +238,16 @@ public class MainActivity extends AppCompatActivity {
                                 if (item.name.equals(data.name)) {
                                     Log.d(TAG, "进入addListener/setOnItemRemoveListener/remove方法,将isSelect改为true");
                                     data.isSelect = true;
+                                    itemAdapter.notifyDataSetChanged();
                                     break;
                                 }
                             }
                         }
                         itemAdapter.notifyDataSetChanged();
-                        blockAdapter.notifyDataSetChanged();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             }
         });
 
@@ -323,9 +303,5 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
-
-    private void processingDataList(List<Item> allData, int i) {
-        cashData.add(i, allData.get(i));
-    }
 
 }

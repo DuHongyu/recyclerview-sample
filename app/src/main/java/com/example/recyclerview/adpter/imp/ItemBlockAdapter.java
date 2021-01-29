@@ -56,13 +56,13 @@ public class ItemBlockAdapter extends RecyclerView.Adapter<ItemBlockAdapter.View
             @Override
             public boolean onLongClick(View v) {
                 vibrator.vibrate(30);
-                holder.btn.setVisibility(View.VISIBLE);
+/*                holder.btn.setVisibility(View.VISIBLE);*/
                 return true;
             }
         });
         holder.text.setText(item.name);
         holder.btn.setImageResource(R.drawable.ic_block_delete);
-        holder.btn.setVisibility(View.INVISIBLE);
+/*        holder.btn.setVisibility(View.INVISIBLE);*/
         holder.btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
