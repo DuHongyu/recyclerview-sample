@@ -3,6 +3,7 @@ package com.example.recyclerview.adpter.imp;
 import android.content.Context;
 
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,8 @@ public class ItemAdapter extends RecyclerView.Adapter implements ItemTouchHelper
 
     private final LayoutInflater inflater;
     private final Context context;
+
+    private static final String TAG = "ItemAdapter";
 
     public ItemAdapter(Context context, @NonNull List<Item> data) {
         this.context = context;
@@ -59,33 +62,31 @@ public class ItemAdapter extends RecyclerView.Adapter implements ItemTouchHelper
         } else {
             final int index = position;
             FunctionViewHolder holder = (FunctionViewHolder) viewHolder;
-            Item fi = data.get(position);
-            ImageView imageView = setImage(fi.imageUrl, holder.iv);
+            Item item = data.get(position);
+            ImageView imageView = setImage(item.imageUrl, holder.iv);
             final Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-            imageView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    vibrator.vibrate(30);
-                    holder.btn.setVisibility(View.VISIBLE);
-                    return true;
-                }
+            imageView.setOnLongClickListener(v -> {
+                vibrator.vibrate(30);
+                holder.btn.setVisibility(View.VISIBLE);
+                return true;
             });
-            holder.text.setText(fi.name);
-            holder.btn.setImageResource(fi.isSelect ? R.drawable.ic_block_selected : R.drawable.ic_block_add);
+            holder.text.setText(item.name);
+            holder.btn.setImageResource(item.isSelect ? R.drawable.ic_block_selected : R.drawable.ic_block_add);
             holder.btn.setVisibility(View.INVISIBLE);
-            holder.btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Item f = data.get(index);
-                    if (!f.isSelect) {
-                        if (listener != null) {
-                            if (listener.add(f)) {
-                                f.isSelect = true;
-                                notifyDataSetChanged();
-                            }
-                        }
+            holder.btn.setOnClickListener(v -> {
+
+                Log.d(TAG, "执行选中的add监听方法:");
+                Item itemSecond = data.get(index);
+                if (!itemSecond.isSelect) {
+                    if (listener != null) {
+                        listener.add(itemSecond);
+                        itemSecond.isSelect = true;
+                        Log.d(TAG, "isSelect属性改变，刷新UI");
+                        notifyDataSetChanged();
+
                     }
                 }
+                holder.btn.setVisibility(View.INVISIBLE);
             });
         }
     }
@@ -167,6 +168,17 @@ public class ItemAdapter extends RecyclerView.Adapter implements ItemTouchHelper
 
     public void setOnItemAddListener(OnItemAddListener listener) {
         this.listener = listener;
+    }
+
+
+    public interface OnItemRemoveListener {
+        void remove(Item item);
+    }
+
+    private OnItemRemoveListener listenerRemove;
+
+    public void setOnItemRemoveListener(OnItemRemoveListener listenerRemove) {
+        this.listenerRemove = listenerRemove;
     }
 
 }

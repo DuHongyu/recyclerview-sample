@@ -3,6 +3,7 @@ package com.example.recyclerview.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.HorizontalScrollView;
@@ -22,6 +23,7 @@ import java.util.List;
 public class PositionControlUtils {
 
     private static final PositionControlUtils instance = new PositionControlUtils();
+    private static final String TAG = "PositionControlUtils";
 
     private PositionControlUtils() {
     }
@@ -31,6 +33,8 @@ public class PositionControlUtils {
     }
 
     public void resetEditHeight(RecyclerView recyclerViewExist, int size, int itemWidth, int lastRow) {
+
+        Log.d(TAG,"执行resetEditHeight，且size = "+size);
 
         try {
             if (size == 0) {

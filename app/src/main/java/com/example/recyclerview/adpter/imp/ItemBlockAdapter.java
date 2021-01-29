@@ -49,30 +49,40 @@ public class ItemBlockAdapter extends RecyclerView.Adapter<ItemBlockAdapter.View
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final int index = position;
-        Item fi = data.get(position);
-        setImage(fi.imageUrl, holder.iv);
-        holder.text.setText(fi.name);
+        Item item = data.get(position);
+        ImageView imageView = setImage(item.imageUrl, holder.iv);
+        final Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        imageView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                vibrator.vibrate(30);
+                holder.btn.setVisibility(View.VISIBLE);
+                return true;
+            }
+        });
+        holder.text.setText(item.name);
         holder.btn.setImageResource(R.drawable.ic_block_delete);
         holder.btn.setVisibility(View.INVISIBLE);
         holder.btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Item fi = data.remove(index);
+                Item item = data.remove(index);
                 if (listener != null) {
-                    listener.remove(fi);
+                    listener.remove(item);
                 }
                 notifyDataSetChanged();
             }
         });
     }
 
-    public void setImage(String url, ImageView iv) {
+    public ImageView setImage(String url, ImageView iv) {
         try {
             int rid = context.getResources().getIdentifier(url, "drawable", context.getPackageName());
             iv.setImageResource(rid);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return iv;
     }
 
     @Override
@@ -120,6 +130,13 @@ public class ItemBlockAdapter extends RecyclerView.Adapter<ItemBlockAdapter.View
         }
     }
 
+
+    /**
+     * OnItemRemoveListener
+     *
+     * @author Du
+     * @version 1.0
+     */
     public interface OnItemRemoveListener {
         void remove(Item item);
     }

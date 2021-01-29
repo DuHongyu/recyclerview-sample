@@ -9,9 +9,10 @@
 
     <RelativeLayout
         android:id="@+id/title"
-        android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:background="#FFFFFF" />
+        android:layout_width="fill_parent"
+        android:layout_height="48dp">
+
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -43,8 +44,8 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="4dp"
-        android:background="#778899" />
+        android:layout_height="2dp"
+        android:background="#DCDCDC" />
 
     <HorizontalScrollView
         android:id="@+id/horizonLScrollView"
@@ -63,8 +64,8 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="4dp"
-        android:background="#778899"/>
+        android:layout_height="2dp"
+        android:background="#DCDCDC" />
 
 
     <androidx.recyclerview.widget.RecyclerView

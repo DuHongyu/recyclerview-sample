@@ -49,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
     private List<Item> allData;
     private List<Item> selData;
     private final List<String> scrollTab = new ArrayList<>();
+    private List<Item> cashData = new ArrayList<>();
+    ;
 
     private RecyclerView recyclerViewExist, recyclerViewAll;
     private HorizontalScrollView horizontalScrollView;
@@ -71,9 +73,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //使用SF工具保存选择的模块
+
         handleDataUtils.saveSelectFunctionItem(selData);
-        //保存所有选择状态
+
         handleDataUtils.saveAllFunctionWithState(allData);
     }
 
@@ -114,10 +116,6 @@ public class MainActivity extends AppCompatActivity {
         recyclerViewAll.setAdapter(itemAdapter);
         SpaceItemDecoration spaceDecoration = new SpaceItemDecoration(4, SizeUtils.getInstance().dip2px(this, 10));
         recyclerViewAll.addItemDecoration(spaceDecoration);
-
-        DefaultItemCallback callbackTwo = new DefaultItemCallback(itemAdapter);
-        DefaultItemTouchHelper helperTwo = new DefaultItemTouchHelper(callbackTwo);
-        helperTwo.attachToRecyclerView(recyclerViewAll);
 
         itemWidth = PositionControlUtils.getPositionControlUtils().getActivityWidth(this) / 4 + SizeUtils.getInstance().dip2px(this, 2);
 
@@ -215,6 +213,18 @@ public class MainActivity extends AppCompatActivity {
                         PositionControlUtils.getPositionControlUtils().resetEditHeight(recyclerViewExist, selData.size(), itemWidth, lastRow);
                         blockAdapter.notifyDataSetChanged();
                         item.isSelect = true;
+                        if (item.name != null) {
+                            for (int i = 0; i < allData.size(); i++) {
+                                Item data = allData.get(i);
+                                if (data != null && data.name != null) {
+                                    if (item.name.equals(data.name)) {
+                                        data.isSelect = false;
+                                        break;
+                                    }
+                                }
+                            }
+                            itemAdapter.notifyDataSetChanged();
+                        }
                         return true;
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -227,25 +237,33 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        itemAdapter.setOnItemRemoveListener(new ItemAdapter.OnItemRemoveListener() {
+            @Override
+            public void remove(Item item) {
+
+            }
+        });
         blockAdapter.setOnItemRemoveListener(new ItemBlockAdapter.OnItemRemoveListener() {
             @Override
             public void remove(Item item) {
 
                 Log.d(TAG, "进入addListener/setOnItemRemoveListener/remove方法：");
                 try {
+                    PositionControlUtils.getPositionControlUtils().resetEditHeight(recyclerViewExist, selData.size(), itemWidth, lastRow);
                     if (item != null && item.name != null) {
                         for (int i = 0; i < allData.size(); i++) {
                             Item data = allData.get(i);
                             if (data != null && data.name != null) {
                                 if (item.name.equals(data.name)) {
-                                    data.isSelect = false;
+                                    Log.d(TAG, "进入addListener/setOnItemRemoveListener/remove方法,将isSelect改为true");
+                                    data.isSelect = true;
                                     break;
                                 }
                             }
                         }
                         itemAdapter.notifyDataSetChanged();
+                        blockAdapter.notifyDataSetChanged();
                     }
-                    PositionControlUtils.getPositionControlUtils().resetEditHeight(recyclerViewExist, selData.size(), itemWidth, lastRow);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -305,4 +323,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
+
+    private void processingDataList(List<Item> allData, int i) {
+        cashData.add(i, allData.get(i));
+    }
+
 }

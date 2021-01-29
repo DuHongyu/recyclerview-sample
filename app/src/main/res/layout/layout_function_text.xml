@@ -4,9 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_white"
-    android:drawableStart="@drawable/ic_block_left"
     android:gravity="center_vertical"
     android:paddingTop="4dp"
     android:paddingBottom="4dp"
-    android:textColor="@color/black"
-    android:textSize="18sp" />
+    android:textColor="#293040"
+    android:textSize="17sp"
+    android:textStyle="bold" />
