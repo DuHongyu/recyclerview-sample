@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_white"
-    android:drawableLeft="@drawable/ic_block_left"
+    android:drawableStart="@drawable/ic_block_left"
     android:gravity="center_vertical"
     android:paddingTop="4dp"
     android:paddingBottom="4dp"
