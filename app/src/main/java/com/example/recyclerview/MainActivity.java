@@ -237,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
                             if (data != null && data.name != null) {
                                 if (item.name.equals(data.name)) {
                                     Log.d(TAG, "进入addListener/setOnItemRemoveListener/remove方法,将isSelect改为true");
-                                    data.isSelect = true;
+                                    data.isSelect = false;
                                     itemAdapter.notifyDataSetChanged();
                                     break;
                                 }

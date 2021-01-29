@@ -67,12 +67,12 @@ public class ItemAdapter extends RecyclerView.Adapter implements ItemTouchHelper
             final Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
             imageView.setOnLongClickListener(v -> {
                 vibrator.vibrate(30);
-                /*                holder.btn.setVisibility(View.VISIBLE);*/
+                holder.btn.setVisibility(View.VISIBLE);
                 return true;
             });
             holder.text.setText(item.name);
             holder.btn.setImageResource(item.isSelect ? R.drawable.ic_block_selected : R.drawable.ic_block_add);
-            /*            holder.btn.setVisibility(View.INVISIBLE);*/
+            holder.btn.setVisibility(View.INVISIBLE);
             holder.btn.setOnClickListener(v -> {
 
                 Log.d(TAG, "执行选中的add监听方法:");
@@ -85,7 +85,7 @@ public class ItemAdapter extends RecyclerView.Adapter implements ItemTouchHelper
                         }
                     }
                 }
-                /*                holder.btn.setVisibility(View.INVISIBLE);*/
+                holder.btn.setVisibility(View.INVISIBLE);
             });
         }
     }
