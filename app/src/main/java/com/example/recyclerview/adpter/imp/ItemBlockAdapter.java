@@ -1,6 +1,8 @@
 package com.example.recyclerview.adpter.imp;
 
+import android.app.Service;
 import android.content.Context;
+import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.recyclerview.R;
 import com.example.recyclerview.adpter.ItemTouchHelperAdapter;
-import com.example.recyclerview.entity.FunctionItem;
+import com.example.recyclerview.entity.Item;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,15 +24,15 @@ import java.util.List;
 /**
  * @author Du
  */
-public class FunctionBlockAdapter extends RecyclerView.Adapter<FunctionBlockAdapter.ViewHolder> implements ItemTouchHelperAdapter {
+public class ItemBlockAdapter extends RecyclerView.Adapter<ItemBlockAdapter.ViewHolder> implements ItemTouchHelperAdapter {
 
-    private List<FunctionItem> data = new ArrayList<>();
+    private List<Item> data = new ArrayList<>();
     private final LayoutInflater inflater;
 
 
     private final Context context;
 
-    public FunctionBlockAdapter(Context context, @NonNull List<FunctionItem> data) {
+    public ItemBlockAdapter(Context context, @NonNull List<Item> data) {
         this.context = context;
         inflater = LayoutInflater.from(context);
         if (data != null) {
@@ -47,14 +49,15 @@ public class FunctionBlockAdapter extends RecyclerView.Adapter<FunctionBlockAdap
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         final int index = position;
-        FunctionItem fi = data.get(position);
+        Item fi = data.get(position);
         setImage(fi.imageUrl, holder.iv);
         holder.text.setText(fi.name);
         holder.btn.setImageResource(R.drawable.ic_block_delete);
+        holder.btn.setVisibility(View.INVISIBLE);
         holder.btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FunctionItem fi = data.remove(index);
+                Item fi = data.remove(index);
                 if (listener != null) {
                     listener.remove(fi);
                 }
@@ -118,7 +121,7 @@ public class FunctionBlockAdapter extends RecyclerView.Adapter<FunctionBlockAdap
     }
 
     public interface OnItemRemoveListener {
-        void remove(FunctionItem item);
+        void remove(Item item);
     }
 
     private OnItemRemoveListener listener;

@@ -1,18 +1,17 @@
 package com.example.recyclerview.utils;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.RadioGroup;
 
 /**
  * @author Du
  */
-public class DipUtils {
+public class SizeUtils {
 
-    private static final DipUtils instance = new DipUtils();
-    private DipUtils() {
+    private static final SizeUtils instance = new SizeUtils();
+    private SizeUtils() {
     }
-    public static DipUtils getDipUtils(){
+    public static SizeUtils getDipUtils(){
         return instance;
     }
 

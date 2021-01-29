@@ -3,7 +3,7 @@ package com.example.recyclerview.entity;
 /**
  * @author Du
  */
-public class FunctionItem {
+public class Item {
 
     public String name;
     public boolean isSelect = false;
@@ -13,20 +13,20 @@ public class FunctionItem {
     public int subItemCount = 0;
 
 
-    public FunctionItem(String name, boolean isSelect, String imageUrl, String background) {
+    public Item(String name, boolean isSelect, String imageUrl, String background) {
         this.name = name;
         this.isSelect = isSelect;
         this.imageUrl = imageUrl;
         this.background = background;
     }
 
-    public FunctionItem(String name, boolean isTitle, int subItemCount) {
+    public Item(String name, boolean isTitle, int subItemCount) {
         this.name = name;
         this.isTitle = isTitle;
         this.subItemCount = subItemCount;
     }
 
-    public FunctionItem(String name, boolean isTitle) {
+    public Item(String name, boolean isTitle) {
         this.name = name;
         this.isTitle = isTitle;
     }

@@ -7,11 +7,11 @@ import java.util.ArrayList;
  */
 public class TabItem {
     private String tabName = "";
-    private ArrayList<FunctionItem> functionItems;
+    private ArrayList<Item> items;
 
-    public TabItem(String tabName, ArrayList<FunctionItem> functionItems) {
+    public TabItem(String tabName, ArrayList<Item> items) {
         this.tabName = tabName;
-        this.functionItems = functionItems;
+        this.items = items;
     }
 
     public String getTabName() {
@@ -22,11 +22,11 @@ public class TabItem {
         this.tabName = tabName;
     }
 
-    public ArrayList<FunctionItem> getFunctionItems() {
-        return functionItems;
+    public ArrayList<Item> getItems() {
+        return items;
     }
 
-    public void setFunctionItems(ArrayList<FunctionItem> functionItems) {
-        this.functionItems = functionItems;
+    public void setItems(ArrayList<Item> items) {
+        this.items = items;
     }
 }

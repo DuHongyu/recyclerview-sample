@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.example.recyclerview.entity.FunctionItem;
+import com.example.recyclerview.entity.Item;
 import com.example.recyclerview.entity.TabItem;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -19,25 +19,25 @@ import java.util.List;
 /**
  * @author Du
  */
-public class SfUtils {
+public class HandleDataUtils {
 
     private static final String TAG = "SFUtils";
 
     private final Context context;
     private SharedPreferences sp = null;
 
-    public SfUtils(Context context) {
+    public HandleDataUtils(Context context) {
         this.context = context;
-        sp = context.getSharedPreferences("ceshi", Context.MODE_PRIVATE);
+        sp = context.getSharedPreferences(TAG, Context.MODE_PRIVATE);
     }
 
-    public List<FunctionItem> getAllFunctionWithState() {
+    public List<Item> getAllFunctionWithState() {
         String allData = sp.getString("allData", "");
-        List<FunctionItem> functionItems = new ArrayList<>();
+        List<Item> items = new ArrayList<>();
         List<TabItem> tabItems = null;
         if ("".equals(allData)) {
             try {
-                InputStream is = context.getAssets().open("ceshi.txt");
+                InputStream is = context.getAssets().open("data.txt");
                 InputStreamReader isr = new InputStreamReader(is);
                 BufferedReader br = new BufferedReader(isr);
                 String str = null;
@@ -54,9 +54,9 @@ public class SfUtils {
                 }.getType());
                 if (tabItems != null) {
                     for (int i = 0; i < tabItems.size(); i++) {
-                        FunctionItem functionItem = new FunctionItem(tabItems.get(i).getTabName(), true);
-                        functionItems.add(functionItem);
-                        functionItems.addAll(tabItems.get(i).getFunctionItems());
+                        Item item = new Item(tabItems.get(i).getTabName(), true);
+                        items.add(item);
+                        items.addAll(tabItems.get(i).getItems());
                     }
                 }
             } catch (IOException e) {
@@ -64,35 +64,35 @@ public class SfUtils {
             }
         } else {
             Gson gson = new Gson();
-            functionItems = gson.fromJson(allData, new TypeToken<List<FunctionItem>>() {
+            items = gson.fromJson(allData, new TypeToken<List<Item>>() {
             }.getType());
         }
-        return functionItems;
+        return items;
     }
 
-    public List<FunctionItem> getSelectFunctionItem() {
+    public List<Item> getSelectFunctionItem() {
         String selData = sp.getString("selData", "");
         Log.d(TAG, "selData:" + selData);
-        List<FunctionItem> functionItems = null;
+        List<Item> items = null;
         if ("".equals(selData)) {
-            functionItems = new ArrayList<>();
+            items = new ArrayList<>();
         } else {
             Gson gson = new Gson();
-            functionItems = gson.fromJson(selData, new TypeToken<List<FunctionItem>>() {
+            items = gson.fromJson(selData, new TypeToken<List<Item>>() {
             }.getType());
         }
-        return functionItems;
+        return items;
     }
 
-    public List<FunctionItem> getTabNames() {
+    public List<Item> getTabNames() {
         Log.d(TAG, "进入getTabNames");
         String allData = sp.getString("allData", "");
 
-        List<FunctionItem> functionItems = new ArrayList<>();
+        List<Item> items = new ArrayList<>();
         List<TabItem> tabItems = null;
         if (allData == null) {
             try {
-                InputStream is = context.getAssets().open("ceshi.txt");
+                InputStream is = context.getAssets().open("data.txt");
                 InputStreamReader isr = new InputStreamReader(is);
                 BufferedReader br = new BufferedReader(isr);
                 String str = null;
@@ -110,10 +110,10 @@ public class SfUtils {
                 if (tabItems != null) {
                     int tabItemsCount = 0;
                     for (int i = 0; i < tabItems.size(); i++) {
-                        FunctionItem functionItem = new FunctionItem(tabItems.get(i).getTabName(), true, tabItemsCount);
-                        tabItemsCount = tabItemsCount + tabItems.get(i).getFunctionItems().size() + 1;
-                        functionItems.add(functionItem);
-                        Log.d(TAG, "functionItems:" + functionItems.size());
+                        Item item = new Item(tabItems.get(i).getTabName(), true, tabItemsCount);
+                        tabItemsCount = tabItemsCount + tabItems.get(i).getItems().size() + 1;
+                        items.add(item);
+                        Log.d(TAG, "functionItems:" + items.size());
                     }
                 }
             } catch (IOException e) {
@@ -121,16 +121,16 @@ public class SfUtils {
             }
         }
         Log.d(TAG, "allData:" + allData);
-        Log.d(TAG, "functionItems:" + functionItems.size());
-        return functionItems;
+        Log.d(TAG, "functionItems:" + items.size());
+        return items;
     }
 
-    public void saveSelectFunctionItem(List<FunctionItem> selData) {
+    public void saveSelectFunctionItem(List<Item> selData) {
         Gson gson = new Gson();
         sp.edit().putString("selData", gson.toJson(selData)).apply();
     }
 
-    public void saveAllFunctionWithState(List<FunctionItem> allData) {
+    public void saveAllFunctionWithState(List<Item> allData) {
         Gson gson = new Gson();
         sp.edit().putString("allData", gson.toJson(allData)).apply();
     }

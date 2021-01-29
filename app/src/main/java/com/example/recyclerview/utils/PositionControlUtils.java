@@ -3,7 +3,6 @@ package com.example.recyclerview.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.HorizontalScrollView;
@@ -13,7 +12,7 @@ import android.widget.RadioGroup;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.recyclerview.entity.FunctionItem;
+import com.example.recyclerview.entity.Item;
 
 import java.util.List;
 
@@ -71,7 +70,7 @@ public class PositionControlUtils {
         }
     }
 
-    public void moveToPosition(RecyclerView recyclerViewAll, GridLayoutManager gridManager, int position, boolean isMove, int scrollPosition, List<FunctionItem> allData) {
+    public void moveToPosition(RecyclerView recyclerViewAll, GridLayoutManager gridManager, int position, boolean isMove, int scrollPosition, List<Item> allData) {
 
         int first = gridManager.findFirstVisibleItemPosition();
         int end = gridManager.findLastVisibleItemPosition();
@@ -102,7 +101,7 @@ public class PositionControlUtils {
             int position = scrollTab.indexOf(currentTab);
             int targetPosition = scrollTab.indexOf(currentTab);
             if (targetPosition != -1) {
-                int x = (targetPosition - position) * DipUtils.getDipUtils().getTabWidth(tabWidth,rg_tab);
+                int x = (targetPosition - position) * SizeUtils.getDipUtils().getTabWidth(tabWidth,rg_tab);
                 RadioButton radioButton = ((RadioButton) rg_tab.getChildAt(targetPosition));
                 radioButton.setOnCheckedChangeListener(null);
                 radioButton.setChecked(true);

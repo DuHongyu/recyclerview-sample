@@ -5,32 +5,26 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.HorizontalScrollView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.example.recyclerview.adpter.imp.FunctionAdapter;
-import com.example.recyclerview.adpter.imp.FunctionBlockAdapter;
+import com.example.recyclerview.adpter.imp.ItemAdapter;
+import com.example.recyclerview.adpter.imp.ItemBlockAdapter;
 import com.example.recyclerview.callback.DefaultItemCallback;
 import com.example.recyclerview.callback.DefaultItemTouchHelper;
 import com.example.recyclerview.decorate.SpaceItemDecoration;
-import com.example.recyclerview.entity.FunctionItem;
-import com.example.recyclerview.utils.DipUtils;
+import com.example.recyclerview.entity.Item;
+import com.example.recyclerview.utils.SizeUtils;
 import com.example.recyclerview.utils.PositionControlUtils;
-import com.example.recyclerview.utils.SfUtils;
+import com.example.recyclerview.utils.HandleDataUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,19 +46,19 @@ public class MainActivity extends AppCompatActivity {
     private boolean isMove = false;
     private boolean isDrag = false;
 
-    private List<FunctionItem> allData;
-    private List<FunctionItem> selData;
+    private List<Item> allData;
+    private List<Item> selData;
     private final List<String> scrollTab = new ArrayList<>();
 
     private RecyclerView recyclerViewExist, recyclerViewAll;
     private HorizontalScrollView horizontalScrollView;
     private RadioGroup rg_tab;
 
-    private FunctionBlockAdapter blockAdapter;
-    private FunctionAdapter functionAdapter;
+    private ItemBlockAdapter blockAdapter;
+    private ItemAdapter itemAdapter;
     private GridLayoutManager gridManager;
 
-    private SfUtils sfUtils;
+    private HandleDataUtils handleDataUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +66,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         init();
         addListener();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //使用SF工具保存选择的模块
+        handleDataUtils.saveSelectFunctionItem(selData);
+        //保存所有选择状态
+        handleDataUtils.saveAllFunctionWithState(allData);
     }
 
     public void init() {
@@ -84,14 +87,14 @@ public class MainActivity extends AppCompatActivity {
         rg_tab = (RadioGroup) findViewById(R.id.rg_tab);
         recyclerViewAll = (RecyclerView) findViewById(R.id.recyclerViewAll);
 
-        sfUtils = new SfUtils(this);
-        allData = sfUtils.getAllFunctionWithState();
-        selData = sfUtils.getSelectFunctionItem();
+        handleDataUtils = new HandleDataUtils(this);
+        allData = handleDataUtils.getAllFunctionWithState();
+        selData = handleDataUtils.getSelectFunctionItem();
 
-        blockAdapter = new FunctionBlockAdapter(this, selData);
+        blockAdapter = new ItemBlockAdapter(this, selData);
         recyclerViewExist.setLayoutManager(new GridLayoutManager(this, 5));
         recyclerViewExist.setAdapter(blockAdapter);
-        recyclerViewExist.addItemDecoration(new SpaceItemDecoration(4, DipUtils.getDipUtils().dip2px(this,10)));
+        recyclerViewExist.addItemDecoration(new SpaceItemDecoration(4, SizeUtils.getDipUtils().dip2px(this,10)));
 
         DefaultItemCallback callback = new DefaultItemCallback(blockAdapter);
         DefaultItemTouchHelper helper = new DefaultItemTouchHelper(callback);
@@ -101,22 +104,22 @@ public class MainActivity extends AppCompatActivity {
         gridManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                FunctionItem fi = allData.get(position);
+                Item fi = allData.get(position);
                 return fi.isTitle ? 5 : 1;
             }
         });
 
-        functionAdapter = new FunctionAdapter(this, allData);
+        itemAdapter = new ItemAdapter(this, allData);
         recyclerViewAll.setLayoutManager(gridManager);
-        recyclerViewAll.setAdapter(functionAdapter);
-        SpaceItemDecoration spaceDecoration = new SpaceItemDecoration(4, DipUtils.getDipUtils().dip2px(this,10));
+        recyclerViewAll.setAdapter(itemAdapter);
+        SpaceItemDecoration spaceDecoration = new SpaceItemDecoration(4, SizeUtils.getDipUtils().dip2px(this,10));
         recyclerViewAll.addItemDecoration(spaceDecoration);
 
-        DefaultItemCallback callbackTwo = new DefaultItemCallback(functionAdapter);
+        DefaultItemCallback callbackTwo = new DefaultItemCallback(itemAdapter);
         DefaultItemTouchHelper helperTwo = new DefaultItemTouchHelper(callbackTwo);
         helperTwo.attachToRecyclerView(recyclerViewAll);
 
-        itemWidth = PositionControlUtils.getPositionControlUtils().getActivityWidth(this) / 4 + DipUtils.getDipUtils().dip2px(this,2);
+        itemWidth = PositionControlUtils.getPositionControlUtils().getActivityWidth(this) / 4 + SizeUtils.getDipUtils().dip2px(this,2);
 
         PositionControlUtils.getPositionControlUtils().resetEditHeight(recyclerViewExist,selData.size(),itemWidth,lastRow);
 
@@ -130,17 +133,17 @@ public class MainActivity extends AppCompatActivity {
 
         try {
 
-            List<FunctionItem> tabs = sfUtils.getTabNames();
+            List<Item> tabs = handleDataUtils.getTabNames();
 
             Log.d(TAG, "tabs：" + tabs.size());
 
             if (tabs != null && tabs.size() > 0) {
                 currentTab = tabs.get(0).name;
-                int padding = DipUtils.getDipUtils().dip2px(this,10);
+                int padding = SizeUtils.getDipUtils().dip2px(this,10);
                 int size = tabs.size();
 
                 for (int i = 0; i < size; i++) {
-                    FunctionItem item = tabs.get(i);
+                    Item item = tabs.get(i);
                     if (item.isTitle) {
                         scrollTab.add(item.name);
                         RadioButton rb = new RadioButton(this);
@@ -199,23 +202,9 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d(TAG, "进入addListener方法：");
 
-        //该处为保存按钮添加点击事件
-        findViewById(R.id.submit).setOnClickListener(new View.OnClickListener() {
+        itemAdapter.setOnItemAddListener(new ItemAdapter.OnItemAddListener() {
             @Override
-            public void onClick(View v) {
-
-                Log.d(TAG, "进入addListener/onClick方法：");
-
-                //使用SF工具保存选择的模块
-                sfUtils.saveSelectFunctionItem(selData);
-                //保存所有选择状态
-                sfUtils.saveAllFunctionWithState(allData);
-            }
-        });
-
-        functionAdapter.setOnItemAddListener(new FunctionAdapter.OnItemAddListener() {
-            @Override
-            public boolean add(FunctionItem item) {
+            public boolean add(Item item) {
 
                 Log.d(TAG, "进入addListener/setOnItemAddListener/add方法：");
 
@@ -238,15 +227,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        blockAdapter.setOnItemRemoveListener(new FunctionBlockAdapter.OnItemRemoveListener() {
+        blockAdapter.setOnItemRemoveListener(new ItemBlockAdapter.OnItemRemoveListener() {
             @Override
-            public void remove(FunctionItem item) {
+            public void remove(Item item) {
 
                 Log.d(TAG, "进入addListener/setOnItemRemoveListener/remove方法：");
                 try {
                     if (item != null && item.name != null) {
                         for (int i = 0; i < allData.size(); i++) {
-                            FunctionItem data = allData.get(i);
+                            Item data = allData.get(i);
                             if (data != null && data.name != null) {
                                 if (item.name.equals(data.name)) {
                                     data.isSelect = false;
@@ -254,7 +243,7 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             }
                         }
-                        functionAdapter.notifyDataSetChanged();
+                        itemAdapter.notifyDataSetChanged();
                     }
                     PositionControlUtils.getPositionControlUtils().resetEditHeight(recyclerViewExist,selData.size(),itemWidth,lastRow);
                 } catch (Exception e) {

@@ -2,6 +2,7 @@ package com.example.recyclerview.adpter.imp;
 
 import android.content.Context;
 
+import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.recyclerview.R;
 import com.example.recyclerview.adpter.ItemTouchHelperAdapter;
-import com.example.recyclerview.entity.FunctionItem;
+import com.example.recyclerview.entity.Item;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,14 +24,14 @@ import java.util.List;
 /**
  * @author Du
  */
-public class FunctionAdapter extends RecyclerView.Adapter implements ItemTouchHelperAdapter {
+public class ItemAdapter extends RecyclerView.Adapter implements ItemTouchHelperAdapter {
 
-    private List<FunctionItem> data = new ArrayList<>();
+    private List<Item> data = new ArrayList<>();
 
     private final LayoutInflater inflater;
     private final Context context;
 
-    public FunctionAdapter(Context context, @NonNull List<FunctionItem> data) {
+    public ItemAdapter(Context context, @NonNull List<Item> data) {
         this.context = context;
         if (data != null) {
             this.data = data;
@@ -58,14 +59,24 @@ public class FunctionAdapter extends RecyclerView.Adapter implements ItemTouchHe
         } else {
             final int index = position;
             FunctionViewHolder holder = (FunctionViewHolder) viewHolder;
-            FunctionItem fi = data.get(position);
-            setImage(fi.imageUrl, holder.iv);
+            Item fi = data.get(position);
+            ImageView imageView = setImage(fi.imageUrl, holder.iv);
+            final Vibrator vibrator=(Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+            imageView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    vibrator.vibrate(30);
+                    holder.btn.setVisibility(View.VISIBLE);
+                    return true;
+                }
+            });
             holder.text.setText(fi.name);
             holder.btn.setImageResource(fi.isSelect ? R.drawable.ic_block_selected : R.drawable.ic_block_add);
+            holder.btn.setVisibility(View.INVISIBLE);
             holder.btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    FunctionItem f = data.get(index);
+                    Item f = data.get(index);
                     if (!f.isSelect) {
                         if (listener != null) {
                             if (listener.add(f)) {
@@ -79,13 +90,14 @@ public class FunctionAdapter extends RecyclerView.Adapter implements ItemTouchHe
         }
     }
 
-    public void setImage(String url, ImageView iv) {
+    public ImageView setImage(String url, ImageView iv) {
         try {
             int rid = context.getResources().getIdentifier(url, "drawable", context.getPackageName());
             iv.setImageResource(rid);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return iv;
     }
 
     @Override
@@ -148,7 +160,7 @@ public class FunctionAdapter extends RecyclerView.Adapter implements ItemTouchHe
     }
 
     public interface OnItemAddListener {
-        boolean add(FunctionItem item);
+        boolean add(Item item);
     }
 
     private OnItemAddListener listener;
