@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         blockAdapter = new ItemBlockAdapter(this, selData);
         recyclerViewExist.setLayoutManager(new GridLayoutManager(this, 5));
         recyclerViewExist.setAdapter(blockAdapter);
-        recyclerViewExist.addItemDecoration(new SpaceItemDecoration(4, SizeUtils.getDipUtils().dip2px(this, 10)));
+        recyclerViewExist.addItemDecoration(new SpaceItemDecoration(4, SizeUtils.getInstance().dip2px(this, 10)));
 
         DefaultItemCallback callback = new DefaultItemCallback(blockAdapter);
         DefaultItemTouchHelper helper = new DefaultItemTouchHelper(callback);
@@ -112,14 +112,14 @@ public class MainActivity extends AppCompatActivity {
         itemAdapter = new ItemAdapter(this, allData);
         recyclerViewAll.setLayoutManager(gridManager);
         recyclerViewAll.setAdapter(itemAdapter);
-        SpaceItemDecoration spaceDecoration = new SpaceItemDecoration(4, SizeUtils.getDipUtils().dip2px(this, 10));
+        SpaceItemDecoration spaceDecoration = new SpaceItemDecoration(4, SizeUtils.getInstance().dip2px(this, 10));
         recyclerViewAll.addItemDecoration(spaceDecoration);
 
         DefaultItemCallback callbackTwo = new DefaultItemCallback(itemAdapter);
         DefaultItemTouchHelper helperTwo = new DefaultItemTouchHelper(callbackTwo);
         helperTwo.attachToRecyclerView(recyclerViewAll);
 
-        itemWidth = PositionControlUtils.getPositionControlUtils().getActivityWidth(this) / 4 + SizeUtils.getDipUtils().dip2px(this, 2);
+        itemWidth = PositionControlUtils.getPositionControlUtils().getActivityWidth(this) / 4 + SizeUtils.getInstance().dip2px(this, 2);
 
         PositionControlUtils.getPositionControlUtils().resetEditHeight(recyclerViewExist, selData.size(), itemWidth, lastRow);
 
@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
 
             if (tabs != null && tabs.size() > 0) {
                 currentTab = tabs.get(0).name;
-                int padding = SizeUtils.getDipUtils().dip2px(this, 10);
+                int padding = SizeUtils.getInstance().dip2px(this, 10);
                 int size = tabs.size();
 
                 for (int i = 0; i < size; i++) {

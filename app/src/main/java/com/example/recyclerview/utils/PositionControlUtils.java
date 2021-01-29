@@ -101,7 +101,7 @@ public class PositionControlUtils {
             int position = scrollTab.indexOf(currentTab);
             int targetPosition = scrollTab.indexOf(currentTab);
             if (targetPosition != -1) {
-                int x = (targetPosition - position) * SizeUtils.getDipUtils().getTabWidth(tabWidth, rg_tab);
+                int x = (targetPosition - position) * SizeUtils.getInstance().getTabWidth(tabWidth, rg_tab);
                 RadioButton radioButton = ((RadioButton) rg_tab.getChildAt(targetPosition));
                 radioButton.setOnCheckedChangeListener(null);
                 radioButton.setChecked(true);

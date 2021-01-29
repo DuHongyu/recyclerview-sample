@@ -13,7 +13,7 @@ public class SizeUtils {
     private SizeUtils() {
     }
 
-    public static SizeUtils getDipUtils() {
+    public static SizeUtils getInstance() {
         return instance;
     }
 
