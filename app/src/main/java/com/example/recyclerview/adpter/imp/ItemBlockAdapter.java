@@ -115,7 +115,6 @@ public class ItemBlockAdapter extends RecyclerView.Adapter<ItemBlockAdapter.View
 
     }
 
-
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         private final ImageView iv;

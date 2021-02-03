@@ -76,6 +76,7 @@ public class PositionControlUtils {
 
     public void moveToPosition(RecyclerView recyclerViewAll, GridLayoutManager gridManager, int position, boolean isMove, int scrollPosition, List<Item> allData) {
 
+        Log.d(TAG,"moveToPosition");
         int first = gridManager.findFirstVisibleItemPosition();
         int end = gridManager.findLastVisibleItemPosition();
         if (first == -1 || end == -1) {
@@ -100,7 +101,7 @@ public class PositionControlUtils {
     }
 
     public void scrollTab(List<String> scrollTab, String currentTab, int tabWidth, RadioGroup rg_tab, HorizontalScrollView horizontalScrollView, CompoundButton.OnCheckedChangeListener onCheckedChangeListener) {
-
+        Log.d(TAG,"scrollTab");
         try {
             int position = scrollTab.indexOf(currentTab);
             int targetPosition = scrollTab.indexOf(currentTab);

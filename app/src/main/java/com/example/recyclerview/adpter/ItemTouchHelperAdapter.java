@@ -45,4 +45,7 @@ public interface ItemTouchHelperAdapter {
      * @version 1.0
      */
     void onItemDismiss(RecyclerView.ViewHolder holder);
+
+    int getItemViewType(int position);
+
 }

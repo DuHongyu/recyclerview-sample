@@ -5,17 +5,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Application;
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
 import android.widget.HorizontalScrollView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.didichuxing.doraemonkit.DoraemonKit;
 import com.example.recyclerview.adpter.imp.ItemAdapter;
 import com.example.recyclerview.adpter.imp.ItemBlockAdapter;
 import com.example.recyclerview.callback.DefaultItemCallback;
@@ -44,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean isDrag = false;
     private List<Item> allData;
     private List<Item> selData;
+
     private final List<String> scrollTab = new ArrayList<>();
     private RecyclerView recyclerViewExist, recyclerViewAll;
     private HorizontalScrollView horizontalScrollView;
@@ -84,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
         DefaultItemCallback callback = new DefaultItemCallback(blockAdapter);
         DefaultItemTouchHelper helper = new DefaultItemTouchHelper(callback);
         helper.attachToRecyclerView(recyclerViewExist);
+
         gridManager = new GridLayoutManager(this, 5);
         gridManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
@@ -92,11 +100,40 @@ public class MainActivity extends AppCompatActivity {
                 return fi.isTitle ? 5 : 1;
             }
         });
+
         itemAdapter = new ItemAdapter(this, allData);
         recyclerViewAll.setLayoutManager(gridManager);
         recyclerViewAll.setAdapter(itemAdapter);
         SpaceItemDecoration spaceDecoration = new SpaceItemDecoration(4, SizeUtils.getInstance().dip2px(this, 10));
         recyclerViewAll.addItemDecoration(spaceDecoration);
+
+/*        recyclerViewAll.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Log.d(TAG, "进入setOnTouchListener方法"+v.getId());
+                if (v.getId()!=0){
+                    //发现只有点击了空白处，v.getId，才能打印出东西
+                    Log.d(TAG, "进入setOnTouchListener方法");
+                    //可以在此处做文章
+                    for(int i = 0;i<allData.size();i++){
+                        allData.get(i).isDisplay = false;
+                        allData.get(i).isScale = false;
+                        itemAdapter.notifyDataSetChanged();
+                    }
+                }
+                return false;
+            }
+        });*/
+
+        DefaultItemCallback callback1 = new DefaultItemCallback(itemAdapter);
+/*        for(int i = 0;i<allData.size();i++){
+            if(allData.get(i).isTitle){
+                callback1.change();
+            }
+        }*/
+        DefaultItemTouchHelper helper1 = new DefaultItemTouchHelper(callback1);
+        helper1.attachToRecyclerView(recyclerViewAll);
+
         itemWidth = PositionControlUtils.getPositionControlUtils().getActivityWidth(this) / 4 + SizeUtils.getInstance().dip2px(this, 2);
         PositionControlUtils.getPositionControlUtils().resetEditHeight(recyclerViewExist, selData.size(), itemWidth, lastRow);
         initTab();
@@ -104,14 +141,18 @@ public class MainActivity extends AppCompatActivity {
 
     private void initTab() {
         try {
+            Log.d(TAG, "进入initTab方法");
             List<Item> tabs = handleDataUtils.getTabNames();
+            Log.d(TAG, "tabs:" + tabs);
             if (tabs != null && tabs.size() > 0) {
+                Log.d(TAG, "tabs:" + tabs);
                 currentTab = tabs.get(0).name;
                 int padding = SizeUtils.getInstance().dip2px(this, 10);
                 int size = tabs.size();
                 for (int i = 0; i < size; i++) {
                     Item item = tabs.get(i);
                     if (item.isTitle) {
+                        Log.d(TAG, "RADIOBUTTON方法");
                         scrollTab.add(item.name);
                         RadioButton rb = new RadioButton(this);
                         rb.setPadding(padding, 0, padding, 0);
@@ -121,7 +162,6 @@ public class MainActivity extends AppCompatActivity {
                         rb.setTag(item.subItemCount);
                         rb.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                         try {
-
                             rb.setTextColor(getResources().getColorStateList(R.color.bg_block_text));
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -179,8 +219,20 @@ public class MainActivity extends AppCompatActivity {
                     }
                     return false;
                 } else {
-                    Toast.makeText(MainActivity.this, R.string.the_selected_module_cannot_exceed + MAX_COUNT + R.string.individual, Toast.LENGTH_SHORT).show();
-                    return false;
+                    for (int i = 0; i < allData.size(); i++) {
+                        Log.d(TAG, "进入需要的for循环：");
+                        assert selData != null;
+                        if (allData.get(i).name.equals(selData.get(selData.size() - 1).name)) {
+                            allData.get(i).isSelect = false;
+                        }
+                    }
+                    assert selData != null;
+                    selData.remove(selData.size() - 1);
+
+                    selData.add(0, item);
+                    blockAdapter.notifyDataSetChanged();
+                    item.isSelect = true;
+                    return true;
                 }
             }
         });
@@ -207,6 +259,29 @@ public class MainActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
+            }
+        });
+
+        itemAdapter.setOnLongItemClickListener(new ItemAdapter.OnLongItemClickListener() {
+            @Override
+            public boolean onLongItemClick(List<Item> itemList) {
+                try {
+                    Log.d(TAG, "进入长按更改isDisplay循环：");
+/*                    for (int i = 0; i < allData.size(); i++) {
+                        Item data = allData.get(i);
+                        Log.d(TAG, "执行更改isDisplay参数值：");
+                        data.isDisplay = true;
+                        Log.d(TAG, "allData.isDisplay参数值：" + allData.get(i).isDisplay);
+                        itemAdapter.notifyDataSetChanged();
+                        break;
+                    }*/
+
+                    return true;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return false;
             }
         });
 
@@ -258,4 +333,22 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        closeKeyBoard();
+        return super.onTouchEvent(event);
+    }
+
+    public void closeKeyBoard() {
+        Log.d(TAG, "进入失去焦点方法：");
+        if (getCurrentFocus() != null && getCurrentFocus().getWindowToken() != null) {
+            if(this.getCurrentFocus() != null){
+                for(int i = 0;i<allData.size();i++){
+                    allData.get(i).isDisplay = false;
+                    allData.get(i).isScale = false;
+                    itemAdapter.notifyDataSetChanged();
+                }
+            }
+        }
+    }
 }

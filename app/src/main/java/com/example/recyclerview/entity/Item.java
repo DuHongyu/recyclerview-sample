@@ -11,6 +11,8 @@ public class Item {
     public String background = "";
     public boolean isTitle = false;
     public int subItemCount = 0;
+    public boolean isDisplay = false;
+    public boolean isScale = false;
 
 
     public Item(String name, boolean isSelect, String imageUrl, String background) {
@@ -26,9 +28,10 @@ public class Item {
         this.subItemCount = subItemCount;
     }
 
-    public Item(String name, boolean isTitle) {
+    public Item(String name, boolean isTitle,boolean isDisplay,boolean isScale) {
         this.name = name;
         this.isTitle = isTitle;
+        this.isDisplay = isDisplay;
     }
 
 }

@@ -54,7 +54,7 @@ public class HandleDataUtils {
                 }.getType());
                 if (tabItems != null) {
                     for (int i = 0; i < tabItems.size(); i++) {
-                        Item item = new Item(tabItems.get(i).getTabName(), true);
+                        Item item = new Item(tabItems.get(i).getTabName(), true, false,false);
                         items.add(item);
                         items.addAll(tabItems.get(i).getItems());
                     }
@@ -90,9 +90,11 @@ public class HandleDataUtils {
 
         List<Item> items = new ArrayList<>();
         List<TabItem> tabItems = null;
-        if (allData == null) {
+        if (allData != null) {
             try {
                 InputStream is = context.getAssets().open("data.txt");
+
+                Log.d(TAG, "InputStream:" + is);
                 InputStreamReader isr = new InputStreamReader(is);
                 BufferedReader br = new BufferedReader(isr);
                 String str = null;
