@@ -117,13 +117,14 @@ public class ItemAdapter extends RecyclerView.Adapter implements ItemTouchHelper
             Log.d(TAG, "isDisplay的值:"+item.isDisplay);
             if(item.isDisplay){
                 holder.btn.setVisibility(View.VISIBLE);
-            }else {
-                holder.btn.setVisibility(View.INVISIBLE);
-            }
-            if(item.isScale){
                 holder.itemView.setScaleX(0.9f);
                 holder.itemView.setScaleY(0.9f);
+            }else {
+                holder.btn.setVisibility(View.INVISIBLE);
+                holder.itemView.setScaleX(1.0f);
+                holder.itemView.setScaleY(1.0f);
             }
+
             holder.btn.setOnClickListener(v -> {
                 Log.d(TAG, "执行选中的add监听方法:");
                 Item itemSecond = data.get(index);

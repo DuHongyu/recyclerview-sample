@@ -3,6 +3,7 @@ package com.example.recyclerview.widgets;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
+import android.util.DisplayMetrics;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -14,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 public class SpaceItemDecoration extends RecyclerView.ItemDecoration {
 
-    private int space = 1;
+    private int space = 0;
 
     public SpaceItemDecoration(int row, int space) {
         this.space = space;
@@ -31,5 +32,4 @@ public class SpaceItemDecoration extends RecyclerView.ItemDecoration {
         super.onDrawOver(c, parent, state);
 
     }
-
 }

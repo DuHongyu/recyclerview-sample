@@ -26,6 +26,7 @@ import com.example.recyclerview.adpter.imp.ItemAdapter;
 import com.example.recyclerview.adpter.imp.ItemBlockAdapter;
 import com.example.recyclerview.callback.DefaultItemCallback;
 import com.example.recyclerview.callback.DefaultItemTouchHelper;
+import com.example.recyclerview.thread.MyThread;
 import com.example.recyclerview.widgets.SpaceItemDecoration;
 import com.example.recyclerview.entity.Item;
 import com.example.recyclerview.utils.SizeUtils;
@@ -34,6 +35,8 @@ import com.example.recyclerview.utils.HandleDataUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * @author Du
@@ -60,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
     private GridLayoutManager gridManager;
     private HandleDataUtils handleDataUtils;
 
+    private static Boolean isQuit = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +80,35 @@ public class MainActivity extends AppCompatActivity {
         handleDataUtils.saveAllFunctionWithState(allData);
     }
 
+    @Override
+    public void onBackPressed() {
+
+        if (isQuit == false) {
+            isQuit = true;
+            for (int i = 0; i < allData.size(); i++) {
+                allData.get(i).isDisplay = false;
+                allData.get(i).isScale = false;
+                itemAdapter.notifyDataSetChanged();
+            }
+            MyThread myThread = new MyThread() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(1000);
+                        isQuit = false;
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            };
+            Thread thread = new Thread(myThread);
+            thread.start();
+        } else {
+            finish();
+        }
+    }
+
     public void init() {
         getSupportActionBar().hide();
         recyclerViewExist = (RecyclerView) findViewById(R.id.recyclerViewExist);
@@ -87,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
         blockAdapter = new ItemBlockAdapter(this, selData);
         recyclerViewExist.setLayoutManager(new GridLayoutManager(this, 5));
         recyclerViewExist.setAdapter(blockAdapter);
-        recyclerViewExist.addItemDecoration(new SpaceItemDecoration(4, SizeUtils.getInstance().dip2px(this, 10)));
+        /*        recyclerViewExist.addItemDecoration(new SpaceItemDecoration(4, SizeUtils.getInstance().dip2px(this, 10)));*/
         DefaultItemCallback callback = new DefaultItemCallback(blockAdapter);
         DefaultItemTouchHelper helper = new DefaultItemTouchHelper(callback);
         helper.attachToRecyclerView(recyclerViewExist);
@@ -104,8 +138,8 @@ public class MainActivity extends AppCompatActivity {
         itemAdapter = new ItemAdapter(this, allData);
         recyclerViewAll.setLayoutManager(gridManager);
         recyclerViewAll.setAdapter(itemAdapter);
-        SpaceItemDecoration spaceDecoration = new SpaceItemDecoration(4, SizeUtils.getInstance().dip2px(this, 10));
-        recyclerViewAll.addItemDecoration(spaceDecoration);
+/*        SpaceItemDecoration spaceDecoration = new SpaceItemDecoration(4, SizeUtils.getInstance().dip2px(this, 10));
+        recyclerViewAll.addItemDecoration(spaceDecoration);*/
 
 /*        recyclerViewAll.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -134,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
         DefaultItemTouchHelper helper1 = new DefaultItemTouchHelper(callback1);
         helper1.attachToRecyclerView(recyclerViewAll);
 
-        itemWidth = PositionControlUtils.getPositionControlUtils().getActivityWidth(this) / 4 + SizeUtils.getInstance().dip2px(this, 2);
+        itemWidth = PositionControlUtils.getPositionControlUtils().getActivityWidth(this) / 5;
         PositionControlUtils.getPositionControlUtils().resetEditHeight(recyclerViewExist, selData.size(), itemWidth, lastRow);
         initTab();
     }
@@ -342,8 +376,8 @@ public class MainActivity extends AppCompatActivity {
     public void closeKeyBoard() {
         Log.d(TAG, "进入失去焦点方法：");
         if (getCurrentFocus() != null && getCurrentFocus().getWindowToken() != null) {
-            if(this.getCurrentFocus() != null){
-                for(int i = 0;i<allData.size();i++){
+            if (this.getCurrentFocus() != null) {
+                for (int i = 0; i < allData.size(); i++) {
                     allData.get(i).isDisplay = false;
                     allData.get(i).isScale = false;
                     itemAdapter.notifyDataSetChanged();
