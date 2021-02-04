@@ -8,13 +8,13 @@ import android.widget.RadioGroup;
  */
 public class SizeUtils {
 
-    private static final SizeUtils INSTANCE = new SizeUtils();
+    private static final SizeUtils instance = new SizeUtils();
 
     private SizeUtils() {
     }
 
     public static SizeUtils getInstance() {
-        return INSTANCE;
+        return instance;
     }
 
     public int dip2px(Context context, float dpValue) {

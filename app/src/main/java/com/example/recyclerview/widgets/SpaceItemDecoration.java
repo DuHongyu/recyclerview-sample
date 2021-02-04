@@ -2,8 +2,6 @@ package com.example.recyclerview.widgets;
 
 import android.graphics.Canvas;
 import android.graphics.Rect;
-
-import android.util.DisplayMetrics;
 import android.view.View;
 
 import androidx.annotation.NonNull;

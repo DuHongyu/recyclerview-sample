@@ -1,44 +1,17 @@
 package com.example.recyclerview;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.app.Application;
-import android.content.Context;
 import android.os.Bundle;
-import android.os.Vibrator;
-import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.CompoundButton;
-import android.widget.HorizontalScrollView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Toast;
 
-import com.didichuxing.doraemonkit.DoraemonKit;
-import com.example.recyclerview.adpter.imp.ItemAdapter;
-import com.example.recyclerview.adpter.imp.ItemBlockAdapter;
-import com.example.recyclerview.callback.DefaultItemCallback;
-import com.example.recyclerview.callback.DefaultItemTouchHelper;
-import com.example.recyclerview.init.ActivityInit;
-import com.example.recyclerview.listener.AddListeners;
-import com.example.recyclerview.thread.MyThread;
-import com.example.recyclerview.widgets.SpaceItemDecoration;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.recyclerview.entity.Item;
-import com.example.recyclerview.utils.SizeUtils;
-import com.example.recyclerview.utils.PositionControlUtils;
+import com.example.recyclerview.init.ActivityInit;
+import com.example.recyclerview.thread.MyThread;
 import com.example.recyclerview.utils.HandleDataUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.concurrent.ScheduledExecutorService;
+
 
 /**
  * @author Du

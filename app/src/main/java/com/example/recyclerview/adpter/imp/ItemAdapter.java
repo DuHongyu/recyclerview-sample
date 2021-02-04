@@ -1,7 +1,6 @@
 package com.example.recyclerview.adpter.imp;
 
 import android.content.Context;
-
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.recyclerview.R;
 import com.example.recyclerview.adpter.ItemTouchHelperAdapter;
-import com.example.recyclerview.callback.DefaultItemTouchHelper;
 import com.example.recyclerview.entity.Item;
 
 import java.util.ArrayList;
