@@ -35,7 +35,7 @@ public class DefaultItemCallback extends ItemTouchHelper.Callback {
     @Override
     public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
         Log.d(TAG,"执行onMove方法");
-        if(viewHolder.getItemViewType() == 0){
+        if(viewHolder.getItemViewType() == 1){
             Log.d(TAG,"执行title的onMove方法");
             return false;
         }
@@ -64,7 +64,7 @@ public class DefaultItemCallback extends ItemTouchHelper.Callback {
 
     @Override
     public boolean isLongPressDragEnabled() {
-        if(viewHolderAll.getItemViewType() == 0){
+        if(viewHolderAll.getItemViewType() == 1){
             Log.d(TAG,"执行isLongPressDragEnabled方法");
             return false;
         }
