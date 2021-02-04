@@ -37,9 +37,7 @@ public class ItemAdapter extends RecyclerView.Adapter implements ItemTouchHelper
 
     public ItemAdapter(Context context, @NonNull List<Item> data) {
         this.context = context;
-        if (data != null) {
-            this.data = data;
-        }
+        this.data = data;
         inflater = LayoutInflater.from(context);
     }
 
@@ -86,16 +84,6 @@ public class ItemAdapter extends RecyclerView.Adapter implements ItemTouchHelper
                 holder.btn.clearAnimation();
                 imageView.clearAnimation();
                 Log.d(TAG, "view111111的值:"+holder.btn);
-/*                Item itemFour = data.get(index);
-                if (!itemFour.isDisplay) {
-                    if (mOnLongItemClickListener != null) {
-                        if (mOnLongItemClickListener.onLongItemClick(holder.btn, position,itemFour)) {
-                            itemFour.isDisplay = true;
-                            notifyDataSetChanged();
-                        }
-                    }
-                }*/
-                mOnLongItemClickListener.onLongItemClick(data);
                 for(int i = 0;i<data.size();i++){
                     Log.d(TAG, "执行长按方法展示所有:");
                     data.get(i).isDisplay = true;
@@ -104,13 +92,6 @@ public class ItemAdapter extends RecyclerView.Adapter implements ItemTouchHelper
                 }
                 return true;
             });
-
-/*            final Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-            imageView.setOnLongClickListener(v -> {
-                vibrator.vibrate(30);
-                holder.btn.setVisibility(View.VISIBLE);
-                return true;
-            });*/
             holder.btn.setVisibility(View.INVISIBLE);
             holder.text.setText(item.name);
             holder.btn.setImageResource(item.isSelect ? R.drawable.ic_block_selected : R.drawable.ic_block_add);

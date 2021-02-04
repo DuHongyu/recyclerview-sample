@@ -3,6 +3,7 @@ package com.example.recyclerview.adpter.imp;
 import android.app.Service;
 import android.content.Context;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,17 +53,29 @@ public class ItemBlockAdapter extends RecyclerView.Adapter<ItemBlockAdapter.View
         Item item = data.get(position);
         ImageView imageView = setImage(item.imageUrl, holder.iv);
         final Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
-        imageView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                vibrator.vibrate(30);
-                holder.btn.setVisibility(View.VISIBLE);
-                return true;
+        holder.itemView.setOnLongClickListener(v -> {
+            vibrator.vibrate(30);
+            holder.btn.clearAnimation();
+            imageView.clearAnimation();
+            for(int i = 0;i<data.size();i++){
+                data.get(i).isDisplay = true;
+                data.get(i).isScale = true;
+                notifyDataSetChanged();
             }
+            return true;
         });
         holder.text.setText(item.name);
         holder.btn.setImageResource(R.drawable.ic_block_delete);
         holder.btn.setVisibility(View.INVISIBLE);
+        if(item.isDisplay){
+            holder.btn.setVisibility(View.VISIBLE);
+            holder.itemView.setScaleX(0.9f);
+            holder.itemView.setScaleY(0.9f);
+        }else {
+            holder.btn.setVisibility(View.INVISIBLE);
+            holder.itemView.setScaleX(1.0f);
+            holder.itemView.setScaleY(1.0f);
+        }
         holder.btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

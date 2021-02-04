@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class HandleDataUtils {
 
-    private static final String TAG = "SFUtils";
+    private static final String TAG = "HandleDataUtils";
 
     private final Context context;
     private SharedPreferences sp = null;
